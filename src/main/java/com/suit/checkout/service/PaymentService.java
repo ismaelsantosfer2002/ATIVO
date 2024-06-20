@@ -1,6 +1,9 @@
 package com.suit.checkout.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.google.zxing.WriterException;
+import com.google.zxing.qrcode.encoder.QRCode;
 import com.suit.checkout.models.Pagamentos;
 import com.suit.checkout.models.dtos.*;
 import com.suit.checkout.models.dtos.MPDTOS.*;
@@ -12,6 +15,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
@@ -34,6 +38,9 @@ public class PaymentService {
     private static final String postUrlHorizon = "https://api.conta.ativopay.com/v1/transactions";
     private static final String skHorizon = "sk_live_jZQNXA8vIYByfjqnjLKEkS0klPJzNjhYQX5OL7seUb";
     private static final String pkHorizon = "pk_live_N47eCf5hPKI860YhfVdMSUrdwgSP5X";
+
+    @Autowired
+    private GenerateQRCode generateQRCode;
 
     @Autowired
     private PagamentoRepository pagamentoRepository;
@@ -218,43 +225,5 @@ public class PaymentService {
         return new ResponseRifaValues(valorPedidosTotal, valorAprovadoTotal, valorPendenteTotal, valorExpiradoTotal, valorPedidosHoje, valorAprovadoHoje, valorPendenteHoje, valorExpiradoHoje, payments);
     }
 
-    public Object createPaymentHorizon(RequestApiPaymentDTO data){
-        Pagamentos pagamentoModel = createPayment(data);
-        pagamentoRepository.save(pagamentoModel);
-        Integer valorApagar = (int) (data.valorAPagar() * 100);
-        ItemsHorizonDTO itemsHorizonDTO = new ItemsHorizonDTO("Pagamento de brinquedo e caneta", valorApagar, 1, false);
-        HorizonDocumentRequestDTO horizonDocumentRequestDTO = new HorizonDocumentRequestDTO(data.cpf(), "cpf");
-        ClientRequestHorizon clientRequestHorizon = new ClientRequestHorizon(data.nomePagador(), data.email(), horizonDocumentRequestDTO);
-        HorizonRequestPaymentDTO horizonRequestPaymentDTO = new HorizonRequestPaymentDTO(valorApagar, "pix", clientRequestHorizon, List.of(itemsHorizonDTO), callbackUrl);
-
-        String auth = skHorizon + ":x";
-
-
-        String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Basic " + encodedAuth);
-        headers.set("Content-Type", "application/json");
-
-        System.out.println(headers);
-
-        String json;
-        try {
-            json = new ObjectMapper().writeValueAsString(horizonRequestPaymentDTO);
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao converter para JSON.");
-        }
-        System.out.println(json);
-        HttpEntity<String> entity = new HttpEntity<>(json, headers);
-
-        ResponseEntity<ResponseData> responseEntity = restTemplate.exchange(postUrlHorizon, HttpMethod.POST, entity, ResponseData.class);
-
-        ResponseData responseData = responseEntity.getBody();
-        String base64Pix =  Base64.getEncoder().encodeToString(responseData.pix().qrcode().getBytes());
-        ResponsePIX responsePIX = new ResponsePIX(base64Pix, responseData.pix().qrcode(), "Pagamento com Horizon");
-        //ResponsePagamento responsePagamento = new ResponsePagamento(pagamentoModel.getId().toString(), responseMPRequest.point_of_interaction().transaction_data().qr_code_base64(), responseMPRequest.point_of_interaction().transaction_data().qr_code());
-        return responsePIX;
-    }
 
 }

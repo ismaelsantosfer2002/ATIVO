@@ -1,7 +1,7 @@
 package com.suit.checkout.models.dtos.wl;
 
-public record ResponseData(
+public record WhiteLabelCallBackDTO(
         Integer id,
-        PixObject pix
+        DataCallbackDTO data
 ) {
 }

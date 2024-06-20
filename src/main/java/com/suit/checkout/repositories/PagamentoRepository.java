@@ -14,4 +14,6 @@ public interface PagamentoRepository extends JpaRepository<Pagamentos, UUID> {
 
     List<Pagamentos> findAllByNomeRifa(String nomeRifa);
 
+    Pagamentos findPagamentosByIdTransactionAtivoPay(Integer idTransactionAtivoPay);
+
 }

@@ -1,5 +1,6 @@
 package com.suit.checkout.controller;
 
+import com.google.zxing.WriterException;
 import com.suit.checkout.exception.InvalidKeyException;
 import com.suit.checkout.models.Pagamentos;
 import com.suit.checkout.models.dtos.MPDTOS.NotificationMP;
@@ -7,12 +8,16 @@ import com.suit.checkout.models.dtos.PagamentoRequestDTO;
 import com.suit.checkout.models.dtos.RequestApiPaymentDTO;
 import com.suit.checkout.models.dtos.ResponseRifaValues;
 import com.suit.checkout.models.dtos.ReturnSuitPay;
+import com.suit.checkout.models.dtos.wl.DataCallbackDTO;
+import com.suit.checkout.models.dtos.wl.WhiteLabelCallBackDTO;
 import com.suit.checkout.models.enums.StatusPagamento;
+import com.suit.checkout.service.AtivoPayService;
 import com.suit.checkout.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,16 +30,19 @@ public class PaymentController {
     @Autowired
     private PaymentService paymentService;
 
+    @Autowired
+    private AtivoPayService ativoPayService;
+
     @PostMapping
-    public Object createPaymentWithSuitPay(@RequestBody RequestApiPaymentDTO data) {
+    public Object createPaymentWithSuitPay(@RequestBody RequestApiPaymentDTO data) throws IOException, WriterException {
         System.out.println(data);
-        return paymentService.createPaymentHorizon(data);
+        return ativoPayService.createPaymentHorizon(data);
     }
 
     @PostMapping("/callback")
-    public void callback(@RequestBody NotificationMP data) {
-        System.out.println(data);
-         paymentService.verifyStatusPaymentInMp(data.data().id());
+    public void callback(@RequestBody WhiteLabelCallBackDTO data) {
+         System.out.println(data);
+         ativoPayService.callback(data);
     }
 
     @GetMapping

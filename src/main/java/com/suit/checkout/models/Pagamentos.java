@@ -24,6 +24,7 @@ public class Pagamentos {
     private LocalDateTime dataExpiracaoPagamento;
     private StatusPagamento statusPagamento;
     private String idTransactionSuitPay;
+    private Integer idTransactionAtivoPay;
     private String nomeRifa;
 
     public Pagamentos() {
@@ -41,6 +42,7 @@ public class Pagamentos {
         this.cpf = data.cpf();
         this.idTransactionSuitPay = null;
         this.nomeRifa = data.nomeRifa();
+        this.idTransactionAtivoPay = null;
     }
 
     public UUID getId() {
@@ -137,6 +139,14 @@ public class Pagamentos {
 
     public void setNomeRifa(String nomeRifa) {
         this.nomeRifa = nomeRifa;
+    }
+
+    public Integer getIdTransactionAtivoPay() {
+        return idTransactionAtivoPay;
+    }
+
+    public void setIdTransactionAtivoPay(Integer idTransactionAtivoPay) {
+        this.idTransactionAtivoPay = idTransactionAtivoPay;
     }
 }
 
