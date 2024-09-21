@@ -28,8 +28,8 @@ public class AtivoPayService {
     @Autowired
     private PaymentService paymentService;
 
-    private static final String SecretKey = "sk_live_jZQNXA8vIYByfjqnjLKEkS0klPJzNjhYQX5OL7seUb";
-    private static final String callbackUrl = "https://rodapremios.com/api/payment/callback";
+    private static final String SecretKey = "sk_live_53Svv9U3khDlVD60N65FiXkhfi533bmD8MtKU3h4ib";
+    private static final String callbackUrl = "https://lojashvnbr.com/api/payment/callback";
     private static final String postUrlHorizon = "https://api.conta.ativopay.com/v1/transactions";
 
     @Autowired
@@ -74,10 +74,10 @@ public class AtivoPayService {
         ResponseEntity<ResponseData> responseEntity = restTemplate.exchange(postUrlHorizon, HttpMethod.POST, entity, ResponseData.class);
 
         ResponseData responseData = responseEntity.getBody();
-        pagamentoModel.setIdTransactionAtivoPay(responseData.id());
+        pagamentoModel.setIdTransactionSuitPay(responseData.id());
         pagamentoRepository.save(pagamentoModel);
         String codeBase64 = generateQRCode.generateQRCodeBase64(responseData.pix().qrcode());
-        ResponsePIX responsePIX = new ResponsePIX(codeBase64, responseData.pix().qrcode(), "Pagamento com Horizon");
+        ResponsePIX responsePIX = new ResponsePIX(responseData.id(), codeBase64, responseData.pix().qrcode(), "Pagamento com Horizon");
 
 
         return responsePIX;
