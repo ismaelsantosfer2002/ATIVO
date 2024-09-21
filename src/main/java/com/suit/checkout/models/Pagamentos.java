@@ -23,7 +23,7 @@ public class Pagamentos {
     private LocalDateTime dataPagamento;
     private LocalDateTime dataExpiracaoPagamento;
     private StatusPagamento statusPagamento;
-    private String idTransactionSuitPay;
+    private Integer idTransactionSuitPay;
     private Integer idTransactionAtivoPay;
     private String nomeRifa;
 
@@ -125,11 +125,11 @@ public class Pagamentos {
         this.cpf = cpf;
     }
 
-    public String getIdTransactionSuitPay() {
+    public Integer getIdTransactionSuitPay() {
         return idTransactionSuitPay;
     }
 
-    public void setIdTransactionSuitPay(String idTransactionSuitPay) {
+    public void setIdTransactionSuitPay(Integer idTransactionSuitPay) {
         this.idTransactionSuitPay = idTransactionSuitPay;
     }
 
