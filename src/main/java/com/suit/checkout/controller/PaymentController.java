@@ -61,7 +61,7 @@ public class PaymentController {
     }
 
     @GetMapping("/transaction/{id}")
-    public Pagamentos getPaymentByTransactionId(@PathVariable String id) {
+    public Pagamentos getPaymentByTransactionId(@PathVariable Integer id) {
         return paymentService.getPagamentoByIdTransactionSuitPay(id);
     }
 

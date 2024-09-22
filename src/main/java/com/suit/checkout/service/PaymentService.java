@@ -180,8 +180,8 @@ public class PaymentService {
         return pagamentoRepository.findAllByStatusPagamento(statusPagamento);
     }
 
-    public Pagamentos getPagamentoByIdTransactionSuitPay(String idTransactionSuitPay){
-        return pagamentoRepository.findPagamentosByIdTransactionSuitPay(idTransactionSuitPay);
+    public Pagamentos getPagamentoByIdTransactionSuitPay(Integer idTransactionSuitPay){
+        return pagamentoRepository.findPagamentosByIdTransactionAtivoPay(idTransactionSuitPay);
     }
 
     public ResponseRifaValues findPaymentsByNomeRifa(String nomeRifa){

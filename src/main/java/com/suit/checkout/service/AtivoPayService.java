@@ -74,7 +74,7 @@ public class AtivoPayService {
         ResponseEntity<ResponseData> responseEntity = restTemplate.exchange(postUrlHorizon, HttpMethod.POST, entity, ResponseData.class);
 
         ResponseData responseData = responseEntity.getBody();
-        pagamentoModel.setIdTransactionSuitPay(responseData.id());
+        pagamentoModel.setIdTransactionAtivoPay(responseData.id());
         pagamentoRepository.save(pagamentoModel);
         String codeBase64 = generateQRCode.generateQRCodeBase64(responseData.pix().qrcode());
         ResponsePIX responsePIX = new ResponsePIX(responseData.id(), codeBase64, responseData.pix().qrcode(), "Pagamento com Horizon");
